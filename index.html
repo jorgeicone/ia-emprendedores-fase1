@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IA Intensiva para Emprendedores — Del Proceso al Negocio Inteligente</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0F0F1A;
+  --orange: #E05C00;
+  --orange2: #FF7A1A;
+  --orange-glow: rgba(224,92,0,0.15);
+  --green: #0A7B50;
+  --green2: #12BD78;
+  --purple: #6B2FA0;
+  --cream: #FFFAF4;
+  --warm-gray: #F5F0E8;
+  --text: #2A2A3E;
+  --muted: #6B6B85;
+  --white: #FFFFFF;
+  --card-bg: rgba(255,255,255,0.06);
+  --border: rgba(255,255,255,0.1);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--ink); color:var(--white); overflow-x:hidden; }
+
+/* ── NAV ─────────────────────────────────────────── */
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  height:60px; display:flex; align-items:center; justify-content:space-between;
+  padding:0 2.5rem;
+  background:rgba(15,15,26,0.92); backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(224,92,0,0.2);
+}
+.nav-brand {
+  font-family:'Syne',sans-serif; font-weight:800; font-size:0.95rem;
+  color:var(--orange2); letter-spacing:0.02em;
+  display:flex; align-items:center; gap:0.5rem;
+}
+.nav-dot { width:8px; height:8px; border-radius:50%; background:var(--orange2); animation:breathe 2.5s infinite; }
+@keyframes breathe { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(0.7);opacity:0.5} }
+.nav-pills { display:flex; gap:0.25rem; list-style:none; }
+.nav-pills a {
+  display:block; padding:0.35rem 0.9rem;
+  font-size:0.76rem; font-weight:600; letter-spacing:0.04em; text-transform:uppercase;
+  color:rgba(255,255,255,0.4); text-decoration:none; border-radius:100px; transition:all 0.2s;
+}
+.nav-pills a:hover, .nav-pills a.active { color:var(--orange2); background:rgba(224,92,0,0.12); }
+
+/* ── PROGRESS ────────────────────────────────────── */
+.prog-wrap { position:fixed; top:60px; left:0; right:0; height:2px; z-index:99; background:rgba(255,255,255,0.04); }
+.prog-bar { height:100%; background:linear-gradient(90deg,var(--orange),var(--orange2),#FFB347); width:0; transition:width .1s; }
+
+/* ── HERO ────────────────────────────────────────── */
+#hero {
+  min-height:100vh; display:flex; flex-direction:column; justify-content:center;
+  padding:100px 0 60px; position:relative; overflow:hidden;
+  background:radial-gradient(ellipse at 10% 60%, rgba(224,92,0,0.12) 0%, transparent 55%),
+             radial-gradient(ellipse at 85% 20%, rgba(107,47,160,0.1) 0%, transparent 45%),
+             var(--ink);
+}
+.hero-noise {
+  position:absolute; inset:0; pointer-events:none; opacity:0.4;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+}
+.hero-container { max-width:1100px; margin:0 auto; padding:0 2.5rem; position:relative; z-index:1; }
+.hero-chip {
+  display:inline-flex; align-items:center; gap:0.6rem;
+  padding:0.4rem 1rem 0.4rem 0.5rem;
+  background:rgba(224,92,0,0.12); border:1px solid rgba(224,92,0,0.3);
+  border-radius:100px; margin-bottom:2rem;
+  font-size:0.75rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--orange2);
+  animation:fadeUp 0.7s ease both;
+}
+.hero-chip-badge {
+  background:var(--orange2); color:var(--white); border-radius:100px;
+  padding:0.15rem 0.6rem; font-size:0.65rem; font-weight:800; letter-spacing:0.06em;
+}
+.hero-headline {
+  font-family:'Syne',sans-serif; font-weight:800; line-height:1.0;
+  font-size:clamp(3.2rem, 8vw, 6.5rem);
+  margin-bottom:1.5rem; animation:fadeUp 0.7s 0.1s ease both;
+}
+.hero-headline .l1 { display:block; color:var(--white); }
+.hero-headline .l2 { display:block; color:var(--orange2); }
+.hero-headline .l3 { display:block; color:transparent; -webkit-text-stroke:2px rgba(255,255,255,0.25); }
+.hero-desc {
+  font-size:1.05rem; line-height:1.8; color:rgba(255,255,255,0.55);
+  max-width:580px; margin-bottom:2.5rem; animation:fadeUp 0.7s 0.2s ease both;
+}
+.hero-desc strong { color:var(--white); }
+.hero-stats {
+  display:flex; gap:1.5rem; flex-wrap:wrap; margin-bottom:3rem;
+  animation:fadeUp 0.7s 0.3s ease both;
+}
+.stat {
+  display:flex; flex-direction:column; padding:1rem 1.5rem;
+  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:12px;
+}
+.stat-val { font-family:'Syne',sans-serif; font-size:1.6rem; font-weight:800; color:var(--orange2); }
+.stat-label { font-size:0.76rem; color:rgba(255,255,255,0.4); margin-top:0.2rem; text-transform:uppercase; letter-spacing:0.06em; }
+.hero-btn {
+  display:inline-flex; align-items:center; gap:0.7rem;
+  padding:0.9rem 2rem; background:var(--orange); color:white;
+  border:none; border-radius:10px; font-family:'Plus Jakarta Sans',sans-serif;
+  font-weight:700; font-size:0.9rem; cursor:pointer; text-decoration:none;
+  transition:all 0.3s; animation:fadeUp 0.7s 0.4s ease both;
+}
+.hero-btn:hover { background:var(--orange2); transform:translateY(-2px); box-shadow:0 12px 32px rgba(224,92,0,0.4); }
+.hero-floating {
+  position:absolute; right:0; top:50%; transform:translateY(-50%);
+  width:380px; display:flex; flex-direction:column; gap:0.75rem; padding:2rem; opacity:0.7;
+}
+.float-card {
+  padding:1rem 1.25rem; border-radius:12px; border:1px solid rgba(255,255,255,0.08);
+  background:rgba(255,255,255,0.04); display:flex; align-items:center; gap:0.75rem;
+  font-size:0.82rem; color:rgba(255,255,255,0.6); animation:slideIn 0.5s ease both;
+}
+.float-card:nth-child(1){animation-delay:0.8s}
+.float-card:nth-child(2){animation-delay:1s}
+.float-card:nth-child(3){animation-delay:1.2s}
+.float-card:nth-child(4){animation-delay:1.4s}
+.float-icon { font-size:1.4rem; }
+.float-card strong { color:var(--white); display:block; font-size:0.85rem; margin-bottom:0.1rem; }
+@keyframes slideIn { from{opacity:0;transform:translateX(20px)} to{opacity:1;transform:none} }
+@keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:none} }
+
+/* ── SECTIONS ────────────────────────────────────── */
+section { padding:100px 0 80px; }
+.container { max-width:1100px; margin:0 auto; padding:0 2.5rem; }
+.sec-label {
+  font-family:'JetBrains Mono',monospace; font-size:0.72rem; font-weight:500;
+  letter-spacing:0.14em; text-transform:uppercase; color:var(--orange2);
+  display:flex; align-items:center; gap:0.75rem; margin-bottom:0.75rem;
+}
+.sec-label::before { content:'//'; opacity:0.5; }
+.sec-title {
+  font-family:'Syne',sans-serif; font-weight:800;
+  font-size:clamp(2rem,4vw,2.8rem); line-height:1.15; margin-bottom:1.25rem; color:var(--white);
+}
+.sec-title em { font-style:normal; color:var(--orange2); }
+.sec-body { font-size:0.95rem; line-height:1.8; color:rgba(255,255,255,0.55); max-width:680px; }
+
+/* ── REVEAL ─────────────────────────────────────── */
+.reveal { opacity:0; transform:translateY(24px); transition:opacity 0.6s ease, transform 0.6s ease; }
+.reveal.visible { opacity:1; transform:none; }
+.rd1 { transition-delay:0.1s; }
+.rd2 { transition-delay:0.2s; }
+.rd3 { transition-delay:0.3s; }
+
+/* ── WHY SECTION ─────────────────────────────────── */
+#por-que { background:linear-gradient(180deg, #141426 0%, var(--ink) 100%); }
+.why-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; margin-top:2.5rem; }
+.why-card {
+  padding:2rem; border-radius:16px; border:1px solid rgba(255,255,255,0.06);
+  background:rgba(255,255,255,0.03); transition:all 0.3s; position:relative; overflow:hidden;
+}
+.why-card::before {
+  content:''; position:absolute; left:0; top:0; bottom:0; width:3px;
+  background:var(--orange); border-radius:0;
+}
+.why-card:hover { transform:translateX(6px); background:rgba(224,92,0,0.06); border-color:rgba(224,92,0,0.2); }
+.why-num { font-family:'JetBrains Mono',monospace; font-size:0.7rem; color:var(--orange2); opacity:0.7; margin-bottom:0.75rem; }
+.why-card h3 { font-family:'Syne',sans-serif; font-size:1.05rem; font-weight:700; margin-bottom:0.6rem; }
+.why-card p { font-size:0.86rem; line-height:1.65; color:rgba(255,255,255,0.5); }
+
+/* ── PROFILES ─────────────────────────────────────── */
+#perfiles { background:linear-gradient(180deg,#141426,var(--ink)); }
+.profiles-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.25rem; margin-top:2.5rem; }
+.profile-card {
+  padding:2rem; border-radius:16px; border:1px solid rgba(255,255,255,0.07);
+  background:rgba(255,255,255,0.03); transition:all 0.3s;
+}
+.profile-card:hover { transform:translateY(-5px); border-color:rgba(224,92,0,0.25); }
+.profile-emoji { font-size:2.2rem; margin-bottom:1rem; }
+.profile-card h3 { font-family:'Syne',sans-serif; font-size:1.1rem; font-weight:800; margin-bottom:0.6rem; }
+.profile-card h3 span { display:block; font-size:0.7rem; color:var(--orange2); font-weight:600; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:0.25rem; }
+.profile-card p { font-size:0.85rem; line-height:1.65; color:rgba(255,255,255,0.5); }
+.p1 { border-top:3px solid var(--orange); }
+.p2 { border-top:3px solid #3D1F6E; }
+.p3 { border-top:3px solid var(--green2); }
+
+/* ── MODULES ─────────────────────────────────────── */
+#modulos { background:var(--ink); }
+.mod-nav { display:flex; gap:0; margin-bottom:2rem; border-radius:12px; overflow:hidden; border:1px solid rgba(255,255,255,0.08); }
+.mod-tab {
+  flex:1; padding:1rem 0.5rem; background:rgba(255,255,255,0.03);
+  border:none; color:rgba(255,255,255,0.4); cursor:pointer;
+  font-family:'Plus Jakarta Sans',sans-serif; font-size:0.82rem; font-weight:600;
+  transition:all 0.2s; border-right:1px solid rgba(255,255,255,0.06);
+  text-align:center; line-height:1.3;
+}
+.mod-tab:last-child{border-right:none}
+.mod-tab:hover { color:var(--white); background:rgba(255,255,255,0.05); }
+.mod-tab.active { background:var(--orange); color:white; }
+.mod-tab .tab-day { font-size:0.65rem; opacity:0.7; display:block; margin-bottom:0.2rem; text-transform:uppercase; letter-spacing:0.06em; }
+.mod-panel { display:none; }
+.mod-panel.active { display:grid; grid-template-columns:300px 1fr; gap:0; border-radius:16px; overflow:hidden; border:1px solid rgba(255,255,255,0.08); animation:panelIn 0.3s ease; }
+@keyframes panelIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+.mod-left {
+  padding:2.5rem; display:flex; flex-direction:column; justify-content:space-between;
+  background:linear-gradient(160deg,var(--orange),#8B2F00);
+}
+.mod-left .big-num { font-family:'Syne',sans-serif; font-size:7rem; font-weight:800; opacity:0.15; line-height:1; margin-bottom:1rem; }
+.mod-left h2 { font-family:'Syne',sans-serif; font-size:1.4rem; font-weight:800; line-height:1.2; margin-bottom:1rem; }
+.mod-left .schedule { font-family:'JetBrains Mono',monospace; font-size:0.75rem; opacity:0.7; }
+.mod-hours-badge {
+  display:inline-flex; align-items:center; gap:0.4rem;
+  padding:0.4rem 0.9rem; background:rgba(255,255,255,0.15); border-radius:100px;
+  font-size:0.78rem; font-weight:600; margin-top:1rem;
+}
+.mod-right { padding:2.5rem; background:rgba(255,255,255,0.02); }
+.mod-obj { font-size:0.92rem; line-height:1.75; color:rgba(255,255,255,0.6); padding-bottom:1.75rem; margin-bottom:1.75rem; border-bottom:1px solid rgba(255,255,255,0.08); }
+.themes-list { display:grid; grid-template-columns:1fr 1fr; gap:0.65rem; }
+.theme-row { display:flex; gap:0.6rem; align-items:flex-start; font-size:0.83rem; color:rgba(255,255,255,0.65); line-height:1.5; }
+.tdot { width:5px; height:5px; border-radius:50%; background:var(--orange2); flex-shrink:0; margin-top:0.5rem; }
+.mod-deliverable {
+  margin-top:1.75rem; padding:1.25rem; border-radius:12px;
+  background:rgba(224,92,0,0.08); border:1px solid rgba(224,92,0,0.2);
+  display:flex; gap:0.75rem; align-items:flex-start;
+}
+.mod-deliverable-icon { font-size:1.4rem; flex-shrink:0; }
+.mod-deliverable-text h4 { font-size:0.82rem; font-weight:700; color:var(--orange2); margin-bottom:0.3rem; text-transform:uppercase; letter-spacing:0.05em; }
+.mod-deliverable-text p { font-size:0.82rem; color:rgba(255,255,255,0.55); line-height:1.5; }
+.mod-panel.m2 .mod-left { background:linear-gradient(160deg,#0A5E3A,#062B1C); }
+.mod-panel.m3 .mod-left { background:linear-gradient(160deg,#3D1F6E,#1A0A36); }
+.mod-panel.m4 .mod-left { background:linear-gradient(160deg,#1A1A2E,#0A0A18); border-right:2px solid var(--orange); }
+.mod-panel.m5 .mod-left { background:linear-gradient(160deg,#1A2E1A,#0A180A); border-right:2px solid var(--green2); }
+.mod-panel.m2 .tdot { background:var(--green2); }
+.mod-panel.m3 .tdot { background:#B07EEA; }
+.mod-panel.m4 .tdot { background:var(--orange2); }
+.mod-panel.m5 .tdot { background:var(--green2); }
+
+/* ── AI THREAD ───────────────────────────────────── */
+#ia-transversal { background:linear-gradient(160deg,#0F0F1A,#141426); }
+.ai-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:1rem; margin-top:2.5rem; }
+.ai-card {
+  padding:1.75rem; border-radius:14px; border:1px solid rgba(255,255,255,0.07);
+  background:rgba(255,255,255,0.03); transition:all 0.3s; text-align:center;
+}
+.ai-card:hover { transform:translateY(-5px); border-color:rgba(224,92,0,0.3); background:rgba(224,92,0,0.06); }
+.ai-card-icon { font-size:2rem; margin-bottom:1rem; }
+.ai-card h3 { font-family:'Syne',sans-serif; font-size:0.95rem; font-weight:700; margin-bottom:0.6rem; color:var(--orange2); }
+.ai-card p { font-size:0.8rem; line-height:1.6; color:rgba(255,255,255,0.5); margin-bottom:0.75rem; }
+.ai-tools { display:flex; flex-wrap:wrap; gap:0.3rem; justify-content:center; }
+.ai-tool {
+  font-family:'JetBrains Mono',monospace; font-size:0.65rem;
+  padding:0.2rem 0.5rem; border-radius:4px;
+  background:rgba(224,92,0,0.15); color:var(--orange2); border:1px solid rgba(224,92,0,0.2);
+}
+
+/* ── DELIVERABLES ────────────────────────────────── */
+#entregables { background:var(--ink); }
+.del-timeline { display:flex; flex-direction:column; gap:0; margin-top:2.5rem; position:relative; }
+.del-timeline::before {
+  content:''; position:absolute; left:28px; top:0; bottom:0; width:2px;
+  background:linear-gradient(180deg,var(--orange),var(--orange2),#FFB347,var(--green2),#4A90E2);
+}
+.del-item { display:flex; gap:1.5rem; padding:1.5rem 1.5rem 1.5rem 0; position:relative; }
+.del-dot {
+  width:58px; height:58px; border-radius:14px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.5rem; position:relative; z-index:1; border:2px solid;
+}
+.dd1 { background:rgba(224,92,0,0.15); border-color:var(--orange); }
+.dd2 { background:rgba(18,189,120,0.12); border-color:var(--green2); }
+.dd3 { background:rgba(176,126,234,0.12); border-color:#B07EEA; }
+.dd4 { background:rgba(224,92,0,0.15); border-color:var(--orange2); }
+.dd5 { background:rgba(74,144,226,0.15); border-color:#4A90E2; }
+.del-body { flex:1; padding-top:0.6rem; }
+.del-mod { font-family:'JetBrains Mono',monospace; font-size:0.7rem; color:var(--orange2); margin-bottom:0.3rem; text-transform:uppercase; letter-spacing:0.08em; }
+.del-body h3 { font-family:'Syne',sans-serif; font-size:1.05rem; font-weight:700; margin-bottom:0.4rem; }
+.del-body p { font-size:0.85rem; line-height:1.65; color:rgba(255,255,255,0.5); }
+.del-highlight {
+  display:inline-flex; align-items:center; gap:0.4rem;
+  margin-top:0.6rem; padding:0.3rem 0.75rem;
+  background:rgba(18,189,120,0.1); border:1px solid rgba(18,189,120,0.2);
+  border-radius:100px; font-size:0.75rem; color:var(--green2); font-weight:600;
+}
+
+/* ── CIERRE ──────────────────────────────────────── */
+#cierre {
+  background:radial-gradient(ellipse at 50% 0%, rgba(224,92,0,0.15) 0%, transparent 60%), var(--ink);
+  text-align:center; padding:120px 0;
+}
+.cierre-inner { max-width:700px; margin:0 auto; padding:0 2.5rem; }
+.cierre-badge {
+  display:inline-block; padding:0.4rem 1rem;
+  background:rgba(224,92,0,0.12); border:1px solid rgba(224,92,0,0.3);
+  border-radius:100px; font-size:0.75rem; font-weight:700; color:var(--orange2);
+  letter-spacing:0.08em; text-transform:uppercase; margin-bottom:2rem;
+}
+.cierre-title {
+  font-family:'Syne',sans-serif; font-size:clamp(2.5rem,5vw,3.8rem); font-weight:800;
+  line-height:1.1; margin-bottom:1.5rem; color:var(--white);
+}
+.cierre-title em { font-style:normal; color:var(--orange2); }
+.cierre-sub {
+  font-size:1rem; line-height:1.8; color:rgba(255,255,255,0.55);
+  margin-bottom:1.5rem;
+}
+.cierre-author { font-size:0.85rem; color:rgba(255,255,255,0.3); margin-bottom:2.5rem; }
+.btn-group { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; margin-bottom:3rem; }
+.btn-primary-o {
+  padding:0.9rem 2rem; background:var(--orange); color:white;
+  border:none; border-radius:10px; font-weight:700; font-size:0.9rem;
+  cursor:pointer; text-decoration:none; transition:all 0.3s;
+}
+.btn-primary-o:hover { background:var(--orange2); transform:translateY(-2px); box-shadow:0 12px 32px rgba(224,92,0,0.4); }
+.btn-ghost {
+  padding:0.9rem 2rem; background:transparent; color:rgba(255,255,255,0.7);
+  border:1px solid rgba(255,255,255,0.2); border-radius:10px; font-weight:600;
+  font-size:0.9rem; cursor:pointer; text-decoration:none; transition:all 0.3s;
+}
+.btn-ghost:hover { border-color:rgba(255,255,255,0.5); color:white; }
+
+/* ── FIRMA ────────────────────────────────────────── */
+.firma-block {
+  margin-top:2rem; padding:1.5rem 2rem;
+  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:14px; display:inline-block; text-align:left;
+}
+.firma-block .firma-top {
+  font-family:'JetBrains Mono',monospace; font-size:0.7rem;
+  color:var(--orange2); display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem;
+}
+.firma-block .firma-name {
+  font-family:'Syne',sans-serif; font-size:1rem; font-weight:800; color:var(--white);
+}
+.firma-block .firma-name span { color:var(--orange2); }
+.firma-block .firma-title { font-size:0.82rem; color:rgba(255,255,255,0.5); margin-top:0.2rem; }
+
+/* ── FOOTER ──────────────────────────────────────── */
+footer {
+  padding:2rem 2.5rem; border-top:1px solid rgba(255,255,255,0.06);
+  display:flex; justify-content:space-between; align-items:center;
+  font-size:0.8rem; color:rgba(255,255,255,0.25); flex-wrap:wrap; gap:1rem;
+}
+.footer-links { display:flex; gap:1.5rem; }
+.footer-links a { color:rgba(255,255,255,0.3); text-decoration:none; transition:color 0.2s; }
+.footer-links a:hover { color:var(--orange2); }
+
+/* ── SCROLL TOP ──────────────────────────────────── */
+.scrolltop {
+  position:fixed; bottom:2rem; right:2rem; z-index:99;
+  width:40px; height:40px; border-radius:10px; border:1px solid rgba(255,255,255,0.1);
+  background:rgba(15,15,26,0.9); color:rgba(255,255,255,0.5);
+  cursor:pointer; font-size:1rem; display:none; transition:all 0.2s;
+}
+.scrolltop.show { display:flex; align-items:center; justify-content:center; }
+.scrolltop:hover { background:var(--orange); color:white; border-color:var(--orange); }
+
+/* ── RESPONSIVE ──────────────────────────────────── */
+@media(max-width:900px) {
+  .hero-floating { display:none; }
+  .why-grid, .profiles-grid { grid-template-columns:1fr; }
+  .mod-panel.active { grid-template-columns:1fr; }
+  .ai-grid { grid-template-columns:repeat(2,1fr); }
+  .nav-pills { display:none; }
+  .themes-list { grid-template-columns:1fr; }
+  .hero-stats { gap:0.75rem; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand"><div class="nav-dot"></div>IA × Emprendedores</div>
+  <ul class="nav-pills">
+    <li><a href="#hero">Inicio</a></li>
+    <li><a href="#por-que">¿Por qué?</a></li>
+    <li><a href="#perfiles">Perfil</a></li>
+    <li><a href="#modulos">Módulos</a></li>
+    <li><a href="#ia-transversal">IA</a></li>
+    <li><a href="#entregables">Entregables</a></li>
+    <li><a href="#cierre">Cierre</a></li>
+  </ul>
+</nav>
+<div class="prog-wrap"><div class="prog-bar" id="prog"></div></div>
+
+<!-- ═══ HERO ═════════════════════════════════════════════ -->
+<section id="hero">
+  <div class="hero-noise"></div>
+  <div class="hero-container">
+    <div class="hero-chip">
+      <span class="hero-chip-badge">NUEVO</span>
+      Fase 1 — Primera Edición · Programa de Emprendimiento con IA
+    </div>
+    <h1 class="hero-headline">
+      <span class="l1">IA Intensiva</span>
+      <span class="l2">para Emprendedores</span>
+      <span class="l3">Del Proceso al Negocio Inteligente</span>
+    </h1>
+    <p class="hero-desc">
+      Un programa de <strong>20 horas en 2.5 días</strong> que lleva al emprendedor desde la validación de sus procesos hasta tener herramientas de Inteligencia Artificial funcionando en su negocio. <strong>Diseñado para cualquier etapa. Enfocado en resultados reales.</strong>
+    </p>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-val">20h</span><span class="stat-label">2.5 Días Intensivos</span></div>
+      <div class="stat"><span class="stat-val">5</span><span class="stat-label">Módulos Progresivos</span></div>
+      <div class="stat"><span class="stat-val">12+</span><span class="stat-label">Herramientas de IA</span></div>
+      <div class="stat"><span class="stat-val">5</span><span class="stat-label">Entregables Reales</span></div>
+    </div>
+    <a href="#modulos" class="hero-btn">Ver el programa completo →</a>
+  </div>
+  <div class="hero-floating">
+    <div class="float-card"><span class="float-icon">🗺</span><div><strong>Módulo 1 — Validación</strong>Mapa de procesos + diagnóstico del modelo</div></div>
+    <div class="float-card"><span class="float-icon">💼</span><div><strong>Módulo 2 — Comercial</strong>Pitch + primeros clientes + marketing digital</div></div>
+    <div class="float-card"><span class="float-icon">⚡</span><div><strong>Módulo 3 — Automatización</strong>3 flujos automatizados activados</div></div>
+    <div class="float-card"><span class="float-icon">🤖</span><div><strong>Módulo 4 — IA Funcional</strong>3 herramientas de IA en tu negocio HOY</div></div>
+    <div class="float-card"><span class="float-icon">🚀</span><div><strong>Módulo 5 — Escala Digital</strong>Estrategia de crecimiento con IA activa</div></div>
+  </div>
+</section>
+
+<!-- ═══ POR QUÉ ═══════════════════════════════════════════ -->
+<section id="por-que">
+  <div class="container">
+    <p class="sec-label reveal">Contexto y problema</p>
+    <h2 class="sec-title reveal rd1">El orden importa. <em>Mucho.</em></h2>
+    <p class="sec-body reveal rd2">La mayoría de emprendedores cometen el mismo error: invierten en marketing antes de tener un proceso, o adoptan IA antes de validar que su negocio funciona. Este programa corrige ese orden.</p>
+    <div class="why-grid">
+      <div class="why-card reveal">
+        <div class="why-num">// 01</div>
+        <h3>El 70% de los emprendimientos no supera los 5 años</h3>
+        <p>La causa principal no es la falta de ideas ni de trabajo duro. Es la falta de validación de procesos antes de escalar.</p>
+      </div>
+      <div class="why-card reveal rd1">
+        <div class="why-num">// 02</div>
+        <h3>Automatizar un proceso roto solo acelera el caos</h3>
+        <p>La IA no arregla procesos deficientes — los magnifica. Por eso este programa empieza por donde debe: el proceso.</p>
+      </div>
+      <div class="why-card reveal rd2">
+        <div class="why-num">// 03</div>
+        <h3>El proceso comercial es el músculo que hace sobrevivir al negocio</h3>
+        <p>Antes de escalar necesitas un pitch que funciona, claridad sobre tu cliente ideal y al menos una forma sistemática de conseguir clientes.</p>
+      </div>
+      <div class="why-card reveal rd3">
+        <div class="why-num">// 04</div>
+        <h3>Este es un programa nuevo — y eso es una ventaja</h3>
+        <p>Primera edición significa energía, disposición de ajustar en tiempo real y el privilegio de ser co-creador de algo que moldeará muchos negocios.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PERFILES ═══════════════════════════════════════════ -->
+<section id="perfiles">
+  <div class="container">
+    <p class="sec-label reveal">¿Para quién es?</p>
+    <h2 class="sec-title reveal rd1">Un programa para <em>cualquier etapa</em></h2>
+    <p class="sec-body reveal rd2">No importa si tienes la idea, el negocio funcionando sin estructura o ventas sin sistema. El enfoque es el proceso, no el nivel.</p>
+    <div class="profiles-grid">
+      <div class="profile-card p1 reveal">
+        <div class="profile-emoji">🌱</div>
+        <h3><span>Etapa Temprana</span>El Fundador</h3>
+        <p>Tienes la idea o el MVP. Necesitas validar que tiene sentido de negocio antes de invertir más tiempo y dinero. El Módulo 1 fue diseñado para ti.</p>
+      </div>
+      <div class="profile-card p2 reveal rd1">
+        <div class="profile-emoji">⚙️</div>
+        <h3><span>En Operación</span>El Operador</h3>
+        <p>Tu negocio ya funciona pero depende de ti para todo. No escala porque no hay procesos documentados ni automatizaciones. El Módulo 3 transforma eso.</p>
+      </div>
+      <div class="profile-card p3 reveal rd2">
+        <div class="profile-emoji">📈</div>
+        <h3><span>Queriendo Escalar</span>El Escalador</h3>
+        <p>Tienes ventas pero no sistema. Quieres crecer sin que todo colapse. Los Módulos 2, 4 y 5 te dan las herramientas para hacerlo inteligentemente.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ MÓDULOS ═══════════════════════════════════════════ -->
+<section id="modulos">
+  <div class="container">
+    <p class="sec-label reveal">Contenido curricular</p>
+    <h2 class="sec-title reveal rd1"><em>5 Módulos</em> · 20 horas · 2.5 días</h2>
+
+    <div class="mod-nav reveal rd2">
+      <button class="mod-tab active" onclick="showMod('m1',this)"><span class="tab-day">Día 1 · Mañana</span>Módulo 1<br>Validación de Procesos</button>
+      <button class="mod-tab" onclick="showMod('m2',this)"><span class="tab-day">Día 1 · Tarde</span>Módulo 2<br>Proceso Comercial</button>
+      <button class="mod-tab" onclick="showMod('m3',this)"><span class="tab-day">Día 2 · Mañana</span>Módulo 3<br>Automatización</button>
+      <button class="mod-tab" onclick="showMod('m4',this)"><span class="tab-day">Día 2 · Tarde</span>Módulo 4<br>IA Protagonista</button>
+      <button class="mod-tab" onclick="showMod('m5',this)"><span class="tab-day">Día 3 · Mañana</span>Módulo 5<br>Escala Digital</button>
+    </div>
+
+    <!-- M1 -->
+    <div class="mod-panel m1 active" id="panel-m1">
+      <div class="mod-left">
+        <div class="big-num">01</div>
+        <div>
+          <h2>Validación de Procesos y Modelo de Negocio</h2>
+          <div class="schedule">Día 1 · 8:00 AM – 12:00 PM</div>
+          <div class="mod-hours-badge">⏱ 4 horas</div>
+        </div>
+      </div>
+      <div class="mod-right">
+        <p class="mod-obj">Antes de invertir en marketing o tecnología, el emprendedor necesita saber qué está funcionando realmente en su negocio y qué no. Este módulo construye esa claridad de forma rápida y práctica.</p>
+        <div class="themes-list">
+          <div class="theme-row"><span class="tdot"></span>Canvas de negocio express: propuesta de valor real vs. percibida</div>
+          <div class="theme-row"><span class="tdot"></span>Mapeo de procesos críticos: flujo de cliente, operación y cobro</div>
+          <div class="theme-row"><span class="tdot"></span>Diagnóstico de cuellos de botella con herramienta visual simple</div>
+          <div class="theme-row"><span class="tdot"></span>Indicadores básicos: ¿sabes si tu negocio es rentable hoy?</div>
+          <div class="theme-row"><span class="tdot"></span>Modelo de negocio revisado: ¿tienes el cliente correcto?</div>
+          <div class="theme-row"><span class="tdot"></span>IA aplicada: usar Claude/ChatGPT para analizar tu modelo en tiempo real</div>
+        </div>
+        <div class="mod-deliverable">
+          <div class="mod-deliverable-icon">🗺</div>
+          <div class="mod-deliverable-text">
+            <h4>Entregable del módulo</h4>
+            <p>Mapa de procesos críticos + diagnóstico completo del modelo de negocio listo para tomar decisiones de inversión y mejora.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- M2 -->
+    <div class="mod-panel m2" id="panel-m2">
+      <div class="mod-left">
+        <div class="big-num">02</div>
+        <div>
+          <h2>El Proceso Comercial que Hace Sobrevivir al Negocio</h2>
+          <div class="schedule">Día 1 · 1:00 PM – 5:00 PM</div>
+          <div class="mod-hours-badge">⏱ 4 horas</div>
+        </div>
+      </div>
+      <div class="mod-right">
+        <p class="mod-obj">No hay negocio sin clientes. Este módulo construye el músculo comercial desde la definición del cliente ideal hasta el pitch y las acciones de marketing digital que funcionan sin presupuesto.</p>
+        <div class="themes-list">
+          <div class="theme-row"><span class="tdot"></span>Perfil detallado del cliente ideal con ayuda de IA</div>
+          <div class="theme-row"><span class="tdot"></span>Cómo conseguir los primeros 10 clientes sin presupuesto de pauta</div>
+          <div class="theme-row"><span class="tdot"></span>Estructura del pitch de ventas: problema → solución → prueba → cierre</div>
+          <div class="theme-row"><span class="tdot"></span>Fundamentos de marketing digital: redes, contenido orgánico y SEO básico</div>
+          <div class="theme-row"><span class="tdot"></span>WhatsApp Business y herramientas gratuitas de captación de leads</div>
+          <div class="theme-row"><span class="tdot"></span>IA aplicada: generar scripts de venta, posts y propuestas con IA</div>
+        </div>
+        <div class="mod-deliverable">
+          <div class="mod-deliverable-icon">💼</div>
+          <div class="mod-deliverable-text">
+            <h4>Entregable del módulo</h4>
+            <p>Pitch estructurado + Plan de 30 días con acciones concretas para conseguir los primeros clientes o reactivar los actuales.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- M3 -->
+    <div class="mod-panel m3" id="panel-m3">
+      <div class="mod-left">
+        <div class="big-num">03</div>
+        <div>
+          <h2>Automatización Inteligente: Recupera tu Tiempo</h2>
+          <div class="schedule">Día 2 · 8:00 AM – 12:00 PM</div>
+          <div class="mod-hours-badge">⏱ 4 horas</div>
+        </div>
+      </div>
+      <div class="mod-right">
+        <p class="mod-obj">Solo se automatiza lo que ya funciona. Este módulo enseña a identificar las tareas que más tiempo consumen y a implementar herramientas gratuitas o de bajo costo para recuperar horas cada semana.</p>
+        <div class="themes-list">
+          <div class="theme-row"><span class="tdot"></span>¿Qué es automatizar y por qué hacerlo DESPUÉS de validar?</div>
+          <div class="theme-row"><span class="tdot"></span>Inventario de tareas repetitivas: cuáles te cuestan más tiempo y dinero</div>
+          <div class="theme-row"><span class="tdot"></span>Herramientas gratuitas o low-cost: Make, Zapier, Notion, Calendly</div>
+          <div class="theme-row"><span class="tdot"></span>Automatización de respuestas, seguimiento y facturación básica</div>
+          <div class="theme-row"><span class="tdot"></span>CRM sencillo para emprendedores: opciones reales y accesibles</div>
+          <div class="theme-row"><span class="tdot"></span>IA aplicada: flujos de automatización con IA como primer paso</div>
+        </div>
+        <div class="mod-deliverable">
+          <div class="mod-deliverable-icon">⚡</div>
+          <div class="mod-deliverable-text">
+            <h4>Entregable del módulo</h4>
+            <p>Mapa de automatización priorizado + 3 flujos automatizados activados y funcionando durante el taller.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- M4 -->
+    <div class="mod-panel m4" id="panel-m4">
+      <div class="mod-left">
+        <div class="big-num">04</div>
+        <div>
+          <h2>IA Funcional para Emprendedores — Herramientas Reales HOY</h2>
+          <div class="schedule">Día 2 · 1:00 PM – 5:00 PM</div>
+          <div class="mod-hours-badge">⏱ 4 horas</div>
+        </div>
+      </div>
+      <div class="mod-right">
+        <p class="mod-obj">El módulo protagonista. No es teoría sobre IA — es la configuración real, en tiempo de taller, de herramientas que el emprendedor llevará funcionando en su negocio desde el día siguiente.</p>
+        <div class="themes-list">
+          <div class="theme-row"><span class="tdot"></span>Ecosistema de IA para emprendedores: qué existe y qué sirve HOY</div>
+          <div class="theme-row"><span class="tdot"></span>ChatGPT y Claude: productividad, contenido y atención al cliente</div>
+          <div class="theme-row"><span class="tdot"></span>Generación de imágenes para redes: DALL-E, Canva AI, Napkin.ai</div>
+          <div class="theme-row"><span class="tdot"></span>Chatbot propio con Chatbase — activado durante el taller</div>
+          <div class="theme-row"><span class="tdot"></span>Gamma.app: presentaciones y propuestas comerciales en minutos</div>
+          <div class="theme-row"><span class="tdot"></span>ElevenLabs y HeyGen: audio y video corto para redes sociales</div>
+        </div>
+        <div class="mod-deliverable">
+          <div class="mod-deliverable-icon">🤖</div>
+          <div class="mod-deliverable-text">
+            <h4>Entregable del módulo</h4>
+            <p>3 herramientas de IA configuradas y funcionando: chatbot propio, generador de contenido y al menos una automatización con IA activa.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- M5 -->
+    <div class="mod-panel m5" id="panel-m5">
+      <div class="mod-left">
+        <div class="big-num">05</div>
+        <div>
+          <h2>Escala Digital: Estrategia de Crecimiento con IA</h2>
+          <div class="schedule">Día 3 · 8:00 AM – 12:00 PM</div>
+          <div class="mod-hours-badge">⏱ 4 horas</div>
+        </div>
+      </div>
+      <div class="mod-right">
+        <p class="mod-obj">El cierre del ciclo. Con procesos validados, sistema comercial activo, automatizaciones funcionando e IA integrada, este módulo diseña la hoja de ruta de crecimiento sostenible del negocio.</p>
+        <div class="themes-list">
+          <div class="theme-row"><span class="tdot"></span>Del negocio artesanal al negocio digital escalable</div>
+          <div class="theme-row"><span class="tdot"></span>Métricas que importan: cómo medir crecimiento real</div>
+          <div class="theme-row"><span class="tdot"></span>Canales de adquisición digital: cuál elegir según tu etapa</div>
+          <div class="theme-row"><span class="tdot"></span>Construcción de comunidad y marca personal con IA</div>
+          <div class="theme-row"><span class="tdot"></span>Plan de 90 días: acciones, recursos y prioridades</div>
+          <div class="theme-row"><span class="tdot"></span>IA como socio estratégico: integración continua post-taller</div>
+        </div>
+        <div class="mod-deliverable">
+          <div class="mod-deliverable-icon">🚀</div>
+          <div class="mod-deliverable-text">
+            <h4>Entregable del módulo</h4>
+            <p>Hoja de ruta de crecimiento a 90 días + stack digital del negocio definido + plan de contenido con IA para los próximos 30 días.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ IA TRANSVERSAL ══════════════════════════════════ -->
+<section id="ia-transversal">
+  <div class="container">
+    <p class="sec-label reveal">Hilo conductor del programa</p>
+    <h2 class="sec-title reveal rd1">La IA es <em>transversal</em>, no un tema final</h2>
+    <p class="sec-body reveal rd2">La Inteligencia Artificial aparece en cada módulo como aliada práctica. No esperamos al Módulo 4 para presentarla — la integramos desde el primer minuto del Día 1.</p>
+    <div class="ai-grid">
+      <div class="ai-card reveal">
+        <div class="ai-card-icon">🔍</div>
+        <h3>M1 — Procesos</h3>
+        <p>Analizar modelo de negocio, detectar inconsistencias y generar preguntas de diagnóstico estratégico</p>
+        <div class="ai-tools"><span class="ai-tool">Claude</span><span class="ai-tool">ChatGPT</span></div>
+      </div>
+      <div class="ai-card reveal rd1">
+        <div class="ai-card-icon">💬</div>
+        <h3>M2 — Comercial</h3>
+        <p>Crear perfiles de cliente, generar scripts de venta, redactar posts y propuestas comerciales</p>
+        <div class="ai-tools"><span class="ai-tool">ChatGPT</span><span class="ai-tool">Canva AI</span><span class="ai-tool">Gamma</span></div>
+      </div>
+      <div class="ai-card reveal rd2">
+        <div class="ai-card-icon">⚙️</div>
+        <h3>M3 — Automatización</h3>
+        <p>Diseñar flujos y documentar procesos antes de implementar con herramientas de bajo costo</p>
+        <div class="ai-tools"><span class="ai-tool">Make+AI</span><span class="ai-tool">Zapier</span></div>
+      </div>
+      <div class="ai-card reveal rd3">
+        <div class="ai-card-icon">🚀</div>
+        <h3>M4 — IA Protagonista</h3>
+        <p>Chatbot propio, generación visual, video con IA y automatización de respuestas al cliente</p>
+        <div class="ai-tools"><span class="ai-tool">Chatbase</span><span class="ai-tool">DALL-E</span><span class="ai-tool">ElevenLabs</span><span class="ai-tool">HeyGen</span></div>
+      </div>
+      <div class="ai-card reveal" style="transition-delay:0.4s">
+        <div class="ai-card-icon">📊</div>
+        <h3>M5 — Escala</h3>
+        <p>Definir métricas, construir audiencia digital y diseñar hoja de ruta de crecimiento con IA</p>
+        <div class="ai-tools"><span class="ai-tool">Claude</span><span class="ai-tool">Gemini</span><span class="ai-tool">Perplexity</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ENTREGABLES ═════════════════════════════════════ -->
+<section id="entregables">
+  <div class="container">
+    <p class="sec-label reveal">Lo que te llevas</p>
+    <h2 class="sec-title reveal rd1">5 entregables <em>reales</em> en 2.5 días</h2>
+    <p class="sec-body reveal rd2">No hay ejercicios abstractos. Cada módulo termina con algo concreto, funcional y listo para usar en el negocio propio del participante.</p>
+    <div class="del-timeline">
+      <div class="del-item reveal">
+        <div class="del-dot dd1">🗺</div>
+        <div class="del-body">
+          <div class="del-mod">// Módulo 1</div>
+          <h3>Mapa de Procesos + Diagnóstico del Modelo de Negocio</h3>
+          <p>Un documento visual que muestra exactamente qué procesos tiene el negocio, cuáles funcionan y cuáles son cuellos de botella que frenan el crecimiento.</p>
+          <span class="del-highlight">✓ Listo para tomar decisiones de inversión</span>
+        </div>
+      </div>
+      <div class="del-item reveal rd1">
+        <div class="del-dot dd2">💼</div>
+        <div class="del-body">
+          <div class="del-mod">// Módulo 2</div>
+          <h3>Pitch Estructurado + Plan de 30 Días para Primeros Clientes</h3>
+          <p>Un pitch de ventas claro y practicado, más un plan de acción concreto para los próximos 30 días con acciones específicas, gratuitas o de bajo costo.</p>
+          <span class="del-highlight">✓ Accionable desde el día siguiente</span>
+        </div>
+      </div>
+      <div class="del-item reveal rd2">
+        <div class="del-dot dd3">⚡</div>
+        <div class="del-body">
+          <div class="del-mod">// Módulo 3</div>
+          <h3>Mapa de Automatización + 3 Flujos Activados</h3>
+          <p>El inventario de tareas repetitivas del negocio priorizado por impacto, más tres automatizaciones reales configuradas y activadas durante el taller.</p>
+          <span class="del-highlight">✓ Ahorrando tiempo desde el lunes siguiente</span>
+        </div>
+      </div>
+      <div class="del-item reveal rd3">
+        <div class="del-dot dd4">🤖</div>
+        <div class="del-body">
+          <div class="del-mod">// Módulo 4</div>
+          <h3>3 Herramientas de IA Configuradas y Funcionando en el Negocio</h3>
+          <p>Un chatbot propio activo, un generador de contenido de redes configurado con la voz del negocio, y una automatización con IA para respuestas.</p>
+          <span class="del-highlight">✓ IA trabajando en tu negocio desde mañana</span>
+        </div>
+      </div>
+      <div class="del-item reveal" style="transition-delay:0.4s">
+        <div class="del-dot dd5">🚀</div>
+        <div class="del-body">
+          <div class="del-mod">// Módulo 5</div>
+          <h3>Hoja de Ruta de Crecimiento a 90 Días</h3>
+          <p>Un plan estratégico personalizado con canales, métricas, stack digital definido y plan de contenido con IA para los próximos 30 días.</p>
+          <span class="del-highlight">✓ Estrategia clara para escalar con sistema</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CIERRE ══════════════════════════════════════════ -->
+<section id="cierre">
+  <div class="container cierre-inner">
+    <div class="cierre-badge reveal">🔥 Primera Edición — Sé parte del origen</div>
+    <h2 class="cierre-title reveal rd1">
+      Tu negocio merece<br>procesos <em>inteligentes</em>
+    </h2>
+    <p class="cierre-sub reveal rd2">
+      Primero validamos. Luego vendemos. Luego automatizamos. Luego la IA potencia todo. Luego escalamos con sistema.
+      Este es el orden correcto — y este programa lo enseña en 20 horas.
+    </p>
+    <p class="cierre-author reveal rd3">— Julián Castiblanco, Chief AI Officer · Ingenieros de Marketing</p>
+    <div class="btn-group reveal">
+      <a href="mailto:info@ingenierosdemarketing.com.co" class="btn-primary-o">Inscribirme en la Fase 1 ✉</a>
+      <a href="https://www.linkedin.com/in/juliancastiblanco/" target="_blank" class="btn-ghost">Ver perfil docente</a>
+    </div>
+
+    <!-- FIRMA JORGE HUGO -->
+    <div class="firma-block reveal rd1">
+      <div class="firma-top">✦ Desarrollado por:</div>
+      <div class="firma-name"><span>In</span>geniero Jorge Hugo Perez</div>
+      <div class="firma-title">Consultor y Mentor IA &amp; Grow Marketing</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 Ingenieros de Marketing · Julián Castiblanco · Avalado por el Politécnico Grancolombiano</p>
+  <div class="footer-links">
+    <a href="https://www.linkedin.com/in/juliancastiblanco/" target="_blank">LinkedIn</a>
+    <a href="https://ingenierosdemarketing.com.co" target="_blank">ingenierosdemarketing.com.co</a>
+  </div>
+</footer>
+
+<button class="scrolltop" id="scrolltop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+// TABS — completamente reconstruido
+function showMod(id, btn) {
+  document.querySelectorAll('.mod-panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.mod-tab').forEach(function(b){ b.classList.remove('active'); });
+  var panel = document.getElementById('panel-' + id);
+  if (panel) panel.classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+// PROGRESS BAR + SCROLL TOP + ACTIVE NAV
+var prog = document.getElementById('prog');
+var st = document.getElementById('scrolltop');
+var sections = document.querySelectorAll('section[id]');
+var navLinks = document.querySelectorAll('.nav-pills a');
+
+window.addEventListener('scroll', function(){
+  var scrolled = window.scrollY;
+  var total = document.documentElement.scrollHeight - window.innerHeight;
+  if (prog) prog.style.width = (scrolled / total * 100) + '%';
+  if (st) st.classList.toggle('show', scrolled > 400);
+  var cur = '';
+  sections.forEach(function(s){
+    if (scrolled >= s.offsetTop - 100) cur = s.id;
+  });
+  navLinks.forEach(function(a){
+    a.classList.toggle('active', a.getAttribute('href') === '#' + cur);
+  });
+});
+
+// REVEAL ON SCROLL
+var reveals = document.querySelectorAll('.reveal');
+var observer = new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if (e.isIntersecting) e.target.classList.add('visible');
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+reveals.forEach(function(r){ observer.observe(r); });
+</script>
+</body>
+</html>
